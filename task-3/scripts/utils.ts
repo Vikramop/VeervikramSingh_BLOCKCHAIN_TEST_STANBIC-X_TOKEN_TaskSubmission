@@ -10,7 +10,8 @@ import '@matterlabs/hardhat-zksync-verify/dist/src/type-extensions';
 const PRIVATE_KEY_HARDHAT_CONFIGURATION_VARIABLE_NAME = 'WALLET_PRIVATE_KEY';
 
 export const getProvider = () => {
-  const rpcUrl = 'https://api.testnet.abs.xyz';
+  // const rpcUrl = 'https://api.testnet.abs.xyz';
+  const rpcUrl = 'https://sepolia.era.zksync.dev';
   if (!rpcUrl)
     throw `⛔️ RPC URL wasn't found in "${hre.network.name}"! Please add a "url" field to the network config in hardhat.config.ts`;
 

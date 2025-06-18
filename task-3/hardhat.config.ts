@@ -1,6 +1,4 @@
 import type { HardhatUserConfig } from 'hardhat/config';
-
-import '@nomicfoundation/hardhat-chai-matchers';
 import '@matterlabs/hardhat-zksync';
 
 import dotenv from 'dotenv';
@@ -10,14 +8,15 @@ const config: HardhatUserConfig = {
   defaultNetwork: 'abstractTestnet',
   networks: {
     abstractTestnet: {
-      url: 'https://api.testnet.abs.xyz',
+      url: 'https://sepolia.era.zksync.dev',
       ethNetwork: 'sepolia',
       zksync: true,
+      // chainId: 300,
       accounts: process.env.WALLET_PRIVATE_KEY
         ? [process.env.WALLET_PRIVATE_KEY]
         : [],
       verifyURL:
-        'https://api-explorer-verify.testnet.abs.xyz/contract_verification',
+        'https://explorer.sepolia.era.zksync.dev/contract_verification',
     },
     anvilZKsync: {
       url: 'http://127.0.0.1:8011',
@@ -42,6 +41,9 @@ const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.24',
   },
+  // etherscan: {
+  //   apiKey: process.env.ETHERSCAN_API_KEY, // for contract verification
+  // },
 };
 
 export default config;

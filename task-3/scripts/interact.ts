@@ -38,7 +38,7 @@ async function main() {
   await (
     await wallet.sendTransaction({
       to: CONTRACT_ADDRESS,
-      value: ethers.parseEther('0.001'),
+      value: ethers.parseEther('0.015'),
     })
   ).wait();
 
@@ -54,26 +54,6 @@ async function main() {
       }),
     },
   });
-
-  // const type = 'General'; // We're using a general flow in this example
-
-  // // Create the object
-  // const paymasterParams = getPaymasterParams(CONTRACT_ADDRESS, {
-  //   type,
-  //   innerInput: getGeneralPaymasterInput({
-  //     type,
-  //     innerInput: '0x', // Any additional info to send to the paymaster
-  //   }),
-  // });
-
-  // // Submit tx, as an example, send a message to another wallet.
-  // const tx = await wallet.sendTransaction({
-  //   to: LOCAL_RICH_WALLETS[3].address, // Just send it to some other wallet
-  //   data: hexlify(toUtf8Bytes('Hello, world!')), // Send them a cute lil message
-  //   // customData: {
-  //   //   paymasterParams, // Provide the paymaster params object
-  //   // },
-  // });
 
   console.log('bal after', (await wallet.getBalance()).toString());
 
