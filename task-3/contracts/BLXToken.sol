@@ -12,7 +12,7 @@ contract BLXToken is ERC20, Ownable {
 
     constructor(
         uint256 initialSupply
-    ) Ownable(msg.sender) ERC20("BLUME Token", "BLX") {
+    ) Ownable() ERC20("BLUME Token", "BLX") {
         _mint(msg.sender, initialSupply * 10 ** decimals());
         maxTxAmount = (initialSupply * 10 ** decimals()) / 100; // 1% maxTxAmount with decimals
 

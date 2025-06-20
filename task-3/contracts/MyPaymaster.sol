@@ -8,7 +8,7 @@ import {BOOTLOADER_FORMAL_ADDRESS} from "@matterlabs/zksync-contracts/contracts/
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MyPaymaster is IPaymaster, Ownable {
-    constructor() Ownable(msg.sender) {}
+    constructor() Ownable() {}
 
     modifier onlyBootloader() {
         require(
@@ -77,36 +77,4 @@ contract MyPaymaster is IPaymaster, Ownable {
     receive() external payable {}
 }
 
-// contract MyPaymaster is IPaymaster, Ownable {
-//     constructor() Ownable(msg.sender) {}
 
-//     modifier onlyBootloader() {
-//         require(msg.sender == BOOTLOADER_FORMAL_ADDRESS, "Only bootloader");
-//         _;
-//     }
-
-//     function validateAndPayForPaymasterTransaction(
-//         bytes32,
-//         bytes32,
-//         Transaction calldata _transaction
-//     )
-//         external
-//         payable
-//         onlyBootloader
-//         returns (bytes4 magic, bytes memory context)
-//     {
-//         magic = PAYMASTER_VALIDATION_SUCCESS_MAGIC;
-//         context = abi.encode(); // empty context
-//     }
-
-//     function postTransaction(
-//         bytes calldata _context,
-//         Transaction calldata _transaction,
-//         bytes32 _txHash,
-//         bytes32 _suggestedSignedHash,
-//         ExecutionResult _txResult,
-//         uint256 _maxRefundedGas
-//     ) external payable onlyBootloader {}
-
-//     receive() external payable {}
-// }

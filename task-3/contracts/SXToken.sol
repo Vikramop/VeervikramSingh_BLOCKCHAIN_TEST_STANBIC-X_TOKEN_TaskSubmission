@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 interface IBLXToken {
     function transferFrom(
@@ -47,7 +47,7 @@ contract SXToken is ERC20, Ownable, ReentrancyGuard {
         address _blxAddress,
         address _stradaAddress,
         uint256 initialSupply
-    ) ERC20("Stanbic-X Token", "SXT") Ownable(msg.sender) {
+    ) ERC20("Stanbic-X Token", "SXT") Ownable() {
         blxToken = IBLXToken(_blxAddress);
         stradaToken = ISTRADAToken(_stradaAddress);
         maxTxAmount = (initialSupply * 10 ** decimals()) / 100; // 1% maxTxAmount

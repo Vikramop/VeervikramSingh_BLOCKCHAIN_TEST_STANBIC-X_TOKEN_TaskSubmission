@@ -197,7 +197,8 @@ export const deployContract = async (
 
   // If abstractTestnet print explorer URL
   if (hre.network.name === 'abstractTestnet') {
-    const explorerUrl = `https://explorer.testnet.abs.xyz`;
+    const explorerUrl = `https://sepolia.era.zksync.dev`;
+    // const explorerUrl = `https://explorer.testnet.abs.xyz`;
     log(
       `\n🔗 View your contract on the Abstract Block Explorer: ${explorerUrl}/address/${address}\n`
     );
