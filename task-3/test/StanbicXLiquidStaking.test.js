@@ -1,5 +1,8 @@
+const chai = require('chai');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
 describe('StanbicXLiquidStaking', function () {
   let stSXT, SXT, STRADA, owner, user;
@@ -14,7 +17,7 @@ describe('StanbicXLiquidStaking', function () {
     const SXToken = await ethers.getContractFactory('SXToken');
     SXT = await SXToken.deploy(
       ethers.ZeroAddress, // Mock BLX
-      ethers.ZeroAddress, // Mock STRADA (not used here)
+      ethers.ZeroAddress, // Mock STRADA
       initialSupply
     );
 
@@ -57,7 +60,53 @@ describe('StanbicXLiquidStaking', function () {
     await ethers.provider.send('evm_increaseTime', [3600]);
     await ethers.provider.send('evm_mine');
 
-    const earned = await stSXT.earned(user.address);
-    expect(earned).to.equal(rewardRate * 3600n); // 100 * 3600 = 360000
+    const expectedRewards = Number(rewardRate) * 3600; // Convert BigInt to Number
+    const actualRewards = Number(await stSXT.earned(user.address)); // Convert BigInt to Number
+
+    // Allow a small buffer for timing discrepancies
+    const buffer = 300;
+    expect(actualRewards).to.be.within(
+      expectedRewards - buffer,
+      expectedRewards + buffer
+    );
+  });
+
+  it('Should allow users to unstake and receive SXT and rewards', async () => {
+    // Approve and stake SXT
+    await SXT.connect(user).approve(await stSXT.getAddress(), stakeAmount);
+    await stSXT.connect(user).stake(stakeAmount);
+
+    // Advance time by 1 hour to accumulate rewards
+    await ethers.provider.send('evm_increaseTime', [3600]);
+    await ethers.provider.send('evm_mine');
+
+    // Unstake stSXT
+    const stSXTBalance = await stSXT.balanceOf(user.address);
+    await stSXT.connect(user).unstake(stSXTBalance);
+
+    // Check user received SXT back
+    const userSXTBalance = await SXT.balanceOf(user.address);
+    expect(userSXTBalance).to.equal(stakeAmount); // Entire staked amount should be returned
+
+    // Check rewards are paid in STRADA
+    const userRewardBalance = BigInt(await STRADA.balanceOf(user.address)); // Convert to BigInt
+    const expectedRewards = rewardRate * 3600n; // Expected rewards in BigInt
+
+    // Define the buffer as BigInt
+    const buffer = 300n;
+
+    // Adjust the assertion for BigInt
+    expect(userRewardBalance).to.satisfy(
+      (balance) =>
+        balance >= expectedRewards - buffer &&
+        balance <= expectedRewards + buffer,
+      `Expected reward balance to be within range ${
+        expectedRewards - buffer
+      } and ${expectedRewards + buffer}, but got ${userRewardBalance}`
+    );
+
+    // Check user's stSXT balance is zero
+    const userStSXTBalance = BigInt(await stSXT.balanceOf(user.address)); // Ensure BigInt
+    expect(userStSXTBalance).to.equal(0n); // Compare with BigInt 0
   });
 });

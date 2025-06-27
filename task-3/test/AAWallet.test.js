@@ -1,5 +1,8 @@
+const chai = require('chai');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
 describe('AAWallet', function () {
   let wallet, owner, attacker, other;
@@ -38,7 +41,7 @@ describe('AAWallet', function () {
       userOpHash,
       0
     );
-    expect(validation).to.equal(0);
+    expect(validation).to.equal(0n);
   });
 
   it('should revert on invalid signature', async function () {
